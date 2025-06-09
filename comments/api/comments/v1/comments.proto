@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package example.comments.pkg.api.comments.v1;
+
+option go_package = "example/comments/pkg/api/v1;comments";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Example project: Comments API";
+    version: "1.0.0";
+  };
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+
+service Comments {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "Comments service"
+  };
+
+  rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse) {
+    option (google.api.http) = {
+      post: "/comment/create"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    };
+  }
+
+  rpc GetComments(GetCommentsRequest) returns (GetCommentsResponse) {
+    option (google.api.http) = {
+      get: "/comment/list"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    };
+  }
+}
+
+message CreateCommentRequest {
+
+  int64 userID = 1 [
+    (validate.rules).int64.gt = 0
+  ];
+  int64 productID = 2 [
+    (validate.rules).int64.gt = 0
+  ];
+  string text = 3 [
+    (validate.rules).string = {min_len: 5, max_len: 255}
+  ];
+}
+
+message CreateCommentResponse {
+  int64 commentID= 1;
+}
+
+message Comment {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Comment"
+      description: "Comment item"
+      required: ["ID", "userID", "productID", "text"]
+    }
+  };
+
+  int64 ID = 1 [
+    (validate.rules).int64.gt = 0
+  ];
+  int64 userID = 2 [
+    (validate.rules).int64.gt = 0
+  ];
+  string text = 3 [
+    (validate.rules).string = {min_len: 5, max_len: 256}
+  ];
+  google.protobuf.Timestamp ts = 4;
+}
+
+message GetCommentsRequest {
+  int64 productID = 1 [
+    (validate.rules).int64.gt = 0
+  ];
+}
+
+message GetCommentsResponse {
+  int64 productID = 1;
+  repeated Comment comments = 2;
+}

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package example.pkg.api.external.v1;
+
+option go_package = "example/external/pkg/api/v1;external";
+
+import "validate/validate.proto";
+
+service Users {
+
+  rpc CheckUserID(CheckUserIDRequest) returns (CheckUserIDResponse) {
+  }
+}
+
+message CheckUserIDRequest {
+  int64 userID = 1 [
+    (validate.rules).int64.gt = 0
+  ];
+}
+
+message CheckUserIDResponse {
+  bool isCorrect = 1;
+}
+
+service Products {
+  rpc GetOwner(GetOwnerRequest) returns (GetOwnerResponse) {}
+}
+
+message GetOwnerRequest {
+  int64 productID = 1 [
+    (validate.rules).int64.gt = 0
+  ];
+}
+
+message GetOwnerResponse {
+  int64 ownerID = 1;
+}
+
+

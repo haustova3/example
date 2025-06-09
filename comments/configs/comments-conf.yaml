@@ -1,0 +1,29 @@
+service:
+  host:
+  grpc_port: 8083
+  http_port: 8084
+
+jaeger:
+  host: localhost
+  port: 6831
+
+products:
+  host: external
+  port: 8093
+
+users:
+  host: external
+  port: 8093
+
+postgres:
+  host: postgres
+  port: 5432
+  user: comments-user-1
+  password: comments-password-1
+  db_name: comments-db
+
+kafka:
+  host: kafka
+  port: 29092
+  order_topic: loms.order-events
+  brokers: kafka:29092
